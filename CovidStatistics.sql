@@ -24,11 +24,11 @@ From covid..CovidDeaths$
 order by 1,2
 
 -- Countries with Highest Infection Rate compared to Population
-Select Location, Population,max( total_cases) as HighestInfectionCount,  max(total_cases/population)*100 as PercentPopulationInfected
+Select Location, Population,DATE, max( total_cases) as HighestInfectionCount,  max(total_cases/population)*100 as PercentPopulationInfected
 From covid..CovidDeaths$
 --Where location like '%states%'
-group by location, population
-order by 4 desc
+group by location, population,date
+order by 5 desc
 
 -- showing countries with highest death count per population
 Select Location,max(cast(total_deaths as int)) as TotalDeathCount
@@ -56,6 +56,14 @@ From covid..CovidDeaths$
 where continent is not null 
 --Group By date
 order by 1,2
+
+-- by continent, take 'world', 'european union', 'international' out
+
+select location, sum(cast(new_deaths as int)) as TotalDeathCount
+from CovidDeaths$
+where continent is null and location not in ('World', 'European union', 'international')
+GROUP by location
+order by TotalDeathCount DESC	
 
 -- Total population vs Vaccinations
 -- shows percentage of population that has received at least one covid vaccine
